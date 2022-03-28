@@ -26,3 +26,4 @@ Description: Blazing fast terminal-ui for git written in rust
 EOF
 
 dpkg-deb --build $pkgname
+rm -rf $pkgname
