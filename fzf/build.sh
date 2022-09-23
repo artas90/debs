@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="0.29.0"
+VERSION=`cat VERSION | xargs`
 
 pkgname="fzf_"$VERSION"_amd64"
 
@@ -26,3 +26,8 @@ EOF
 
 dpkg-deb --build $pkgname
 rm -r $pkgname
+
+if [ -n "$GITHUB_ENV" ]; then
+  echo "PKG_TAG=$pkgname"           >> $GITHUB_ENV
+  echo "PKG_PATH=fzf/$pkgname.deb" >> $GITHUB_ENV
+fi

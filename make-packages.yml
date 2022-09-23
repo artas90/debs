@@ -1,0 +1,41 @@
+#!
+#! brew install vmware-tanzu/carvel/ytt
+#! ytt -f make-packages.yml > .github/workflows/make-packages.yml
+#!
+
+name: Make packages
+"on": [push]
+jobs:
+  make-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:16.04
+
+    #@yaml/text-templated-strings
+    steps:
+      - uses: actions/checkout@v3
+
+      #@ for pkg in ['deno', 'entr', 'fzf', 'gitui', 'nnn']:
+      - name: ==> Read '(@= pkg @)' version
+        run: echo "PKG_VERSION=(@= pkg @)_$(cat (@= pkg @)/VERSION)_amd64" >> $GITHUB_ENV
+
+      - name: Check if '(@= pkg @)' exists
+        uses: cardinalby/git-get-release-action@1.2.2
+        id: (@= pkg @)Tag
+        with:
+          tag: '${{ env.PKG_VERSION }}'
+          doNotFailIfNotFound: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build '(@= pkg @)'
+        if: "steps.(@= pkg @)Tag.outputs.id == ''"
+        run: cd (@= pkg @) && bash build.sh
+
+      - name: Release '(@= pkg @)'
+        if: "steps.(@= pkg @)Tag.outputs.id == ''"
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.PKG_TAG }}
+          artifacts: ${{ env.PKG_PATH }}
+      #@ end

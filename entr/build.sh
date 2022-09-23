@@ -1,6 +1,6 @@
 #!/bin/sh
 
-VERSION="5.2"
+VERSION=`cat VERSION | xargs`
 
 pkgname="entr_"$VERSION"_amd64"
 
@@ -31,3 +31,8 @@ EOF
 
 dpkg-deb --build $pkgname
 rm -r $pkgname
+
+if [ -n "$GITHUB_ENV" ]; then
+  echo "PKG_TAG=$pkgname"           >> $GITHUB_ENV
+  echo "PKG_PATH=entr/$pkgname.deb" >> $GITHUB_ENV
+fi

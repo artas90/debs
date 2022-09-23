@@ -1,0 +1,105 @@
+name: Make packages
+"on":
+- push
+jobs:
+  make-packages:
+    runs-on: ubuntu-latest
+    container:
+      image: ubuntu:16.04
+    steps:
+    - uses: actions/checkout@v3
+    - name: ==> Read 'deno' version
+      run: echo "PKG_VERSION=deno_$(cat deno/VERSION)_amd64" >> $GITHUB_ENV
+    - name: Check if 'deno' exists
+      uses: cardinalby/git-get-release-action@1.2.2
+      id: denoTag
+      with:
+        tag: ${{ env.PKG_VERSION }}
+        doNotFailIfNotFound: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build 'deno'
+      if: steps.denoTag.outputs.id == ''
+      run: cd deno && bash build.sh
+    - name: Release 'deno'
+      if: steps.denoTag.outputs.id == ''
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.PKG_TAG }}
+        artifacts: ${{ env.PKG_PATH }}
+    - name: ==> Read 'entr' version
+      run: echo "PKG_VERSION=entr_$(cat entr/VERSION)_amd64" >> $GITHUB_ENV
+    - name: Check if 'entr' exists
+      uses: cardinalby/git-get-release-action@1.2.2
+      id: entrTag
+      with:
+        tag: ${{ env.PKG_VERSION }}
+        doNotFailIfNotFound: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build 'entr'
+      if: steps.entrTag.outputs.id == ''
+      run: cd entr && bash build.sh
+    - name: Release 'entr'
+      if: steps.entrTag.outputs.id == ''
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.PKG_TAG }}
+        artifacts: ${{ env.PKG_PATH }}
+    - name: ==> Read 'fzf' version
+      run: echo "PKG_VERSION=fzf_$(cat fzf/VERSION)_amd64" >> $GITHUB_ENV
+    - name: Check if 'fzf' exists
+      uses: cardinalby/git-get-release-action@1.2.2
+      id: fzfTag
+      with:
+        tag: ${{ env.PKG_VERSION }}
+        doNotFailIfNotFound: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build 'fzf'
+      if: steps.fzfTag.outputs.id == ''
+      run: cd fzf && bash build.sh
+    - name: Release 'fzf'
+      if: steps.fzfTag.outputs.id == ''
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.PKG_TAG }}
+        artifacts: ${{ env.PKG_PATH }}
+    - name: ==> Read 'gitui' version
+      run: echo "PKG_VERSION=gitui_$(cat gitui/VERSION)_amd64" >> $GITHUB_ENV
+    - name: Check if 'gitui' exists
+      uses: cardinalby/git-get-release-action@1.2.2
+      id: gituiTag
+      with:
+        tag: ${{ env.PKG_VERSION }}
+        doNotFailIfNotFound: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build 'gitui'
+      if: steps.gituiTag.outputs.id == ''
+      run: cd gitui && bash build.sh
+    - name: Release 'gitui'
+      if: steps.gituiTag.outputs.id == ''
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.PKG_TAG }}
+        artifacts: ${{ env.PKG_PATH }}
+    - name: ==> Read 'nnn' version
+      run: echo "PKG_VERSION=nnn_$(cat nnn/VERSION)_amd64" >> $GITHUB_ENV
+    - name: Check if 'nnn' exists
+      uses: cardinalby/git-get-release-action@1.2.2
+      id: nnnTag
+      with:
+        tag: ${{ env.PKG_VERSION }}
+        doNotFailIfNotFound: true
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Build 'nnn'
+      if: steps.nnnTag.outputs.id == ''
+      run: cd nnn && bash build.sh
+    - name: Release 'nnn'
+      if: steps.nnnTag.outputs.id == ''
+      uses: ncipollo/release-action@v1
+      with:
+        tag: ${{ env.PKG_TAG }}
+        artifacts: ${{ env.PKG_PATH }}

@@ -1,14 +1,13 @@
 #!/bin/sh
 
-VERSION="v4.5"
+VERSION=`cat VERSION | xargs`
 
-short_version=`echo $VERSION | cut -c 2-`
-pkgname="nnn_"$short_version"_amd64"
+pkgname="nnn_"$VERSION"_amd64"
 
 apt update
 apt install -y wget
 
-url="https://github.com/jarun/nnn/releases/download/$VERSION/nnn-musl-static-$short_version.x86_64.tar.gz"
+url="https://github.com/jarun/nnn/releases/download/v$VERSION/nnn-musl-static-$VERSION.x86_64.tar.gz"
 wget -q --show-progress -O nnn.tgz "$url"
 
 mkdir -p $pkgname/usr/local/bin
@@ -20,7 +19,7 @@ mkdir -p $pkgname/DEBIAN
 
 cat > $pkgname/DEBIAN/control <<EOF
 Package: nnn
-Version: $short_version
+Version: $VERSION
 Architecture: amd64
 Maintainer: nnn@example.com
 Description: The unorthodox terminal file manager
@@ -28,3 +27,8 @@ EOF
 
 dpkg-deb --build $pkgname
 rm -rf $pkgname
+
+if [ -n "$GITHUB_ENV" ]; then
+  echo "PKG_TAG=$pkgname"           >> $GITHUB_ENV
+  echo "PKG_PATH=nnn/$pkgname.deb" >> $GITHUB_ENV
+fi
