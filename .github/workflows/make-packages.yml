@@ -103,22 +103,3 @@ jobs:
       with:
         tag: ${{ env.PKG_TAG }}
         artifacts: ${{ env.PKG_PATH }}
-    - name: ==> Read 'nvim' version
-      run: echo "PKG_VERSION=nvim_$(cat nvim/VERSION)_amd64" >> $GITHUB_ENV
-    - name: Check if 'nvim' exists
-      uses: cardinalby/git-get-release-action@1.2.2
-      id: nvimTag
-      with:
-        tag: ${{ env.PKG_VERSION }}
-        doNotFailIfNotFound: true
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-    - name: Build 'nvim'
-      if: steps.nvimTag.outputs.id == ''
-      run: cd nvim && bash build.sh
-    - name: Release 'nvim'
-      if: steps.nvimTag.outputs.id == ''
-      uses: ncipollo/release-action@v1
-      with:
-        tag: ${{ env.PKG_TAG }}
-        artifacts: ${{ env.PKG_PATH }}
