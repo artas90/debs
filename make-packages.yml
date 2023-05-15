@@ -15,7 +15,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      #@ for pkg in ['deno', 'entr', 'fzf', 'gitui', 'nnn', 'nvim']:
+      #@ for pkg in ['deno', 'entr', 'fzf', 'gitui', 'nnn']:
       - name: ==> Read '(@= pkg @)' version
         run: echo "PKG_VERSION=(@= pkg @)_$(cat (@= pkg @)/VERSION)_amd64" >> $GITHUB_ENV
 
