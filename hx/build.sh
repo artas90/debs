@@ -1,10 +1,18 @@
 #!/bin/sh
 
+# 16.04 LTS Xenial Xerus
+# 20.04 LTS Focal Fossa
+# 22.04 LTS Jammy Jellyfish
+# 24.04 LTS Noble Numbat
+
 # docker run -it --rm -v `pwd`:/app -w /app ubuntu:20.04 bash 
 #     /app/build.sh
 
-VERSION="23.05"
+set -euxo pipefail
+
+VERSION="23.10"
 UBUNTU_REL="focal"
+RUST_VER="1.76"
 
 # -- prepare -- -- --
 
@@ -21,11 +29,12 @@ apt update && apt install -y build-essential curl git
 
 curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- --default-toolchain none -y
 source "$HOME/.cargo/env"
-rustup toolchain install stable --profile minimal
+rustup toolchain install $RUST_VER --profile minimal
 
 # -- build app -- -- --
 
-git clone https://github.com/helix-editor/helix && cd helix && git checkout $VERSION
+git clone https://github.com/helix-editor/helix --single-branch --branch=$VERSION --depth=1
+cd helix && git checkout $VERSION
 
 cargo install --path helix-term --locked
 
