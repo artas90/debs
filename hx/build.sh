@@ -5,14 +5,14 @@
 # 22.04 LTS Jammy Jellyfish
 # 24.04 LTS Noble Numbat
 
-# docker run -it --rm -v `pwd`:/app -w /app ubuntu:20.04 bash 
+# docker run -it --rm -v `pwd`:/app -w /app ubuntu:20.04 bash
 #     /app/build.sh
 
 set -euxo pipefail
 
-VERSION="23.10"
-UBUNTU_REL="focal"
-RUST_VER="1.76"
+VERSION="24.07"
+UBUNTU_REL="jammy"
+RUST_VER="1.79"
 
 # -- prepare -- -- --
 
@@ -76,7 +76,7 @@ cp /tmp/app/$pkgname.deb /app/$pkgname.deb
 
 # -- misc -- -- --
 '
-  docker run -it -e "TERM=xterm-256color" --rm -v `pwd`:/app -w /app ubuntu:20.04 bash  
+  docker run -it -e "TERM=xterm-256color" --rm -v `pwd`:/app -w /app ubuntu:20.04 bash
 
   apt update && apt install -y curl
   mkdir -p ~/.config/helix
